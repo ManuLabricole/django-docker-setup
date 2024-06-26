@@ -1,0 +1,11 @@
+services:
+  web:
+    build: .
+    container_name: django-prod
+    command: python django/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - 8000:8000
+    env_file:
+      - ./local/development.env
