@@ -22,7 +22,16 @@ env = environ.Env()
 DEBUG = env.bool("DEBUG", default=True)
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 SECRET_KEY = env("SECRET_KEY")
-
+print(f"SECRET_KEY: {SECRET_KEY}")
+print(f"DEBUG: {DEBUG}")
+print(f"ALLOWED_HOSTS: {ALLOWED_HOSTS}")
+print(f"BASE_DIR: {BASE_DIR}")
+print(f"DB_ENGINE: {env('DB_ENGINE')}")
+print(f"DB_NAME: {env('DB_NAME')}")
+print(f"DB_USER: {env('DB_USER')}")
+print(f"DB_PASSWORD: {env('DB_PASSWORD')}")
+print(f"DB_HOST: {env('DB_HOST')}")
+print(f"DB_PORT: {env('DB_PORT')}")
 # Application definition
 
 INSTALLED_APPS = [
@@ -68,7 +77,7 @@ WSGI_APPLICATION = "core.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
+DATABASE = {
     "default": {
         "ENGINE": env("DB_ENGINE"),
         "NAME": env("DB_NAME"),
