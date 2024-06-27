@@ -10,7 +10,7 @@ services:
     env_file:
       - local/production.env
     environment:
-      PYTHONPATH: /usr/src/app/django
+      PYTHONPATH: /home/app/django
     depends_on:
       - db
   db:
@@ -20,6 +20,12 @@ services:
       - postgres_data_prod:/var/lib/postgresql/data
     env_file:
       - local/production.env
+  nginx:
+    build: ./config/nginx
+    ports:
+      - 1337:80
+    depends_on:
+      - django
 
 volumes:
   postgres_data_prod:
