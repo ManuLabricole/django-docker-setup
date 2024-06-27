@@ -7,7 +7,6 @@ FROM python:3.11.4-slim-buster as builder
 
 # set work directory
 WORKDIR /usr/src/app
-
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -40,13 +39,14 @@ RUN addgroup --system app && adduser --system --group app
 # Create the appropriate directories
 ENV HOME=/home/app
 WORKDIR $HOME
+
 # Set environment variables for the home directory and application home directory.
 # Create the directory specified by APP_HOME (/home/app/web).
 # Set the working directory to APP_HOME (/home/app/web).
 
 # Copy the project files
 COPY . $HOME
-
+RUN mkdir $HOME/django/staticfiles
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends netcat && \
     rm -rf /var/lib/apt/lists/*# Update the package list and install netcat, a utility for reading from and writing to network connections.
@@ -72,6 +72,9 @@ RUN chmod +x  $HOME/scripts/entrypoint.prod.sh
 # Make the entrypoint.prod.sh script executable.
 # Change ownership of all files to the app user
 RUN chown -R app:app $HOME
+# Create the staticfiles directory and set permissions
+
+RUN chown -R app:app /home/app/django/staticfiles
 # Recursively change the ownership of the $APP_HOME directory and its contents to the 'app' user and group.
 # This ensures the app user has the necessary permissions to access the files.
 

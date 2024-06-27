@@ -13,6 +13,8 @@ services:
       PYTHONPATH: /home/app/django
     depends_on:
       - db
+    volumes:
+      - static_volume:/home/app/django/staticfiles
 
   db:
     container_name: db-prod
@@ -28,7 +30,11 @@ services:
       - 1337:80
     depends_on:
       - django
+    volumes:
+      - static_volume:/home/app/django/staticfiles
 
 volumes:
   postgres_data_prod:
     name: postgres_data_prod_volume
+  static_volume:
+    name: static_volume_prod
