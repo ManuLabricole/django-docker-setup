@@ -60,11 +60,11 @@ _shell:
 # 	@echo -e "🚀 ${CYAN}Rebuilding development environment...${NO_COLOR}"
 # 	$(DOCKER_COMPOSE_DEV) up --build -d
 
-# migrations-migrate:  ## 📦 Make Django migrations
-# 	@echo -e "📦 ${CYAN}Making Django migrations...${NO_COLOR}"
-# 	$(DOCKER_COMPOSE_DEV) run --rm django python investment_manager/manage.py makemigrations
-# 	@echo -e "📦 ${CYAN}Applying Django migrations...${NO_COLOR}"
-# 	$(DOCKER_COMPOSE_DEV) run --rm django python investment_manager/manage.py migrate
+migrations-migrate:  ## 📦 Make Django migrations
+	@echo -e "📦 ${CYAN}Making Django migrations...${NO_COLOR}"
+	$(DOCKER_COMPOSE_DEV) run --rm django python django/manage.py makemigrations
+	@echo -e "📦 ${CYAN}Applying Django migrations...${NO_COLOR}"
+	$(DOCKER_COMPOSE_DEV) run --rm django python django/manage.py migrate
 
 # create_custom_superuser:  ## 👤 Create a custom superuser
 # 	@echo -e "👤 ${CYAN}Creating a custom superuser...${NO_COLOR}"
