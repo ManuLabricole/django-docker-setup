@@ -13,4 +13,13 @@
 echo "⏱️ Waiting for PostgreSQL to start..."
 ./scripts/wait-for-it.sh db:5432 --timeout=30 --strict -- echo "Database is up"
 echo "✅  PostgreSQL started!"
+# Adjust the path to manage.py
+echo "🧹 Flushing the database..."
+python django/manage.py flush --no-input
+
+echo "⚙️  Applying database migrations..."
+python django/manage.py migrate --noinput
+
+echo "📦 Collecting static files..."
+python django/manage.py collectstatic --noinput
 exec "$@"
