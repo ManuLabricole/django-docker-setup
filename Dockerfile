@@ -3,7 +3,6 @@ FROM python:3.11.4-slim-buster
 
 # set work directory
 WORKDIR /usr/src/app
-RUN mkdir /usr/src/app/scripts
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -27,10 +26,10 @@ COPY . .
 # COPY ./scripts/entrypoint-dev.sh ./scripts
 # Remove any carriage return characters from the entrypoint script.
 # This is useful if the script was created or edited on a Windows machine, as it uses different line endings (CRLF) compared to Linux (LF).
-RUN sed -i 's/\r$//g' /usr/src/app/scripts/entrypoint-dev.sh
+RUN sed -i 's/\r$//g' /usr/src/app/scripts/entrypoint.dev.sh
 # Make the entrypoint script executable.
 # This is necessary to ensure the script can be run by the container.
-RUN chmod +x /usr/src/app/scripts/entrypoint-dev.sh
+RUN chmod +x /usr/src/app/scripts/entrypoint.dev.sh
 
 
 
