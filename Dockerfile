@@ -34,4 +34,4 @@ RUN chmod +x /usr/src/app/scripts/entrypoint.dev.sh
 
 
 # run entrypoint.sh
-ENTRYPOINT ["/usr/src/app/scripts/entrypoint-dev.sh"]
+ENTRYPOINT ["/usr/src/app/scripts/entrypoint.dev.sh"]
