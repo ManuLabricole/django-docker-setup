@@ -8,11 +8,11 @@ services:
       - postgres_data_dev:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    environment:
-      - POSTGRES_USER=hello_django
-      - POSTGRES_PASSWORD=hello_django
-      - POSTGRES_DB=hello_django_dev
-  web:
+    # environment:
+    #   - POSTGRES_USER=${DB_USER}
+    #   - POSTGRES_PASSWORD=${DB_PASSWORD}
+    #   - POSTGRES_DB=${DB_NAME} # This is actually the NAME of the database
+  django:
     build: .
     container_name: django-dev
     command: python django/manage.py runserver 0.0.0.0:8000
