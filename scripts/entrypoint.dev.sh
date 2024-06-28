@@ -19,5 +19,8 @@ python django/manage.py flush --no-input
 echo "⚙️  Applying database migrations..."
 python django/manage.py migrate
 
+echo "📦 Collecting static files..."
+python django/manage.py collectstatic --noinput
+
 echo "🎉 All setup steps completed! Starting the server..."
 exec "$@"
