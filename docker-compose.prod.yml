@@ -1,0 +1,42 @@
+services:
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: django-prod
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    expose:
+      - 8000
+    env_file:
+      - local/production.env
+    # environment:
+    #   PYTHONPATH: /home/app/django
+    depends_on:
+      - db
+    volumes:
+      - .:/home/app  # Sync local project directory with the container
+      - static_volume:/home/app/django/staticfiles
+
+  db:
+    container_name: db-prod
+    image: postgres:16
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    env_file:
+      - local/production.env
+
+  nginx:
+    build: ./config/nginx
+    container_name: nginx-prod
+    ports:
+      - 1337:80
+    depends_on:
+      - django
+    volumes:
+      - static_volume:/home/app/django/staticfiles
+
+volumes:
+  postgres_data_prod:
+    name: postgres_data_prod_volume
+  static_volume:
+    name: static_volume_prod

@@ -1,0 +1,89 @@
+###########
+# BUILDER #
+###########
+
+# pull official base image
+FROM python:3.11.4-slim-buster as builder
+
+# set work directory
+WORKDIR /usr/src/app
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc
+
+# install python dependencies
+COPY ./requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
+
+
+#########
+# FINAL #
+#########
+
+# Pull the official Python base image
+FROM python:3.11.4-slim-buster
+
+# Create directory for the app user
+RUN mkdir -p /home/app
+# This creates a directory /home/app to store the application files.
+
+# Create the app user
+RUN addgroup --system app && adduser --system --group app
+# This creates a new system group named 'app' and a new system user 'app' that belongs to this group.
+# Using a non-root user enhances security.
+
+# Create the appropriate directories
+ENV HOME=/home/app
+WORKDIR $HOME
+
+# Set environment variables for the home directory and application home directory.
+# Create the directory specified by APP_HOME (/home/app/web).
+# Set the working directory to APP_HOME (/home/app/web).
+
+# Copy the project files
+COPY . $HOME
+# RUN mkdir $HOME/django/staticfiles
+# Install dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends netcat && \
+    rm -rf /var/lib/apt/lists/*# Update the package list and install netcat, a utility for reading from and writing to network connections.
+# Use --no-install-recommends to avoid installing unnecessary packages.
+
+# Install Python dependencies from wheels
+COPY --from=builder /usr/src/app/wheels /wheels
+# Copy the wheels (pre-built packages) from the builder stage to the /wheels directory in the current stage.
+COPY --from=builder /usr/src/app/requirements.txt .
+# Copy the requirements.txt file from the builder stage to the current directory.
+RUN pip install --upgrade pip
+# Upgrade pip to the latest version.
+RUN pip install --no-cache /wheels/*
+# Install the Python packages from the wheels directory.
+# Use --no-cache to prevent pip from using or creating a cache, reducing image size.
+
+# Copy entrypoint.prod.sh
+COPY ./scripts/entrypoint.prod.sh .
+RUN sed -i 's/\r$//g'  $HOME/scripts/entrypoint.prod.sh
+# Remove any carriage return characters from entrypoint.prod.sh.
+# This ensures compatibility between Unix/Linux and Windows line endings.
+RUN chmod +x  $HOME/scripts/entrypoint.prod.sh
+# Make the entrypoint.prod.sh script executable.
+# Change ownership of all files to the app user
+RUN chown -R app:app $HOME
+# Create the staticfiles directory and set permissions
+
+RUN chown -R app:app /home/app/django/staticfiles
+# Recursively change the ownership of the $APP_HOME directory and its contents to the 'app' user and group.
+# This ensures the app user has the necessary permissions to access the files.
+
+# Change to the app user
+USER app
+# Switch to the non-root 'app' user for running the application.
+# This enhances security by not running the application as the root user.
+
+# Run the entrypoint script
+ENTRYPOINT ["/home/app/scripts/entrypoint.prod.sh"]
+# Set the entrypoint for the container to be the entrypoint.prod.sh script.
+# This script will be executed when the container starts.
