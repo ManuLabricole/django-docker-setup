@@ -12,6 +12,7 @@
 # fi
 echo "⏱️ Waiting for PostgreSQL to start..."
 ./scripts/wait-for-it.sh db:5432 --timeout=30 --strict -- echo "Database is up"
+echo "✅ PostgreSQL started!"
 
 echo "🧹 Flushing the database..."
 python django/manage.py flush --no-input
