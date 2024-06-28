@@ -9,11 +9,12 @@ services:
       - 8000
     env_file:
       - local/production.env
-    environment:
-      PYTHONPATH: /home/app/django
+    # environment:
+    #   PYTHONPATH: /home/app/django
     depends_on:
       - db
     volumes:
+      - .:/home/app  # Sync local project directory with the container
       - static_volume:/home/app/django/staticfiles
 
   db:
@@ -26,6 +27,7 @@ services:
 
   nginx:
     build: ./config/nginx
+    container_name: nginx-prod
     ports:
       - 1337:80
     depends_on:
