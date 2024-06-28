@@ -46,7 +46,7 @@ WORKDIR $HOME
 
 # Copy the project files
 COPY . $HOME
-RUN mkdir $HOME/django/staticfiles
+# RUN mkdir $HOME/django/staticfiles
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends netcat && \
     rm -rf /var/lib/apt/lists/*# Update the package list and install netcat, a utility for reading from and writing to network connections.
